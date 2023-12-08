@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class UnitTarget : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private void OnEnable()
+    private void OnTriggerEnter(Collider other)
     {
-        StartCoroutine(Cooldown());
+        if(other.CompareTag("Unit"))
+            StartCoroutine(Cooldown_Coroutine());
     }
 
-    IEnumerator Cooldown()
+    IEnumerator Cooldown_Coroutine()
     {
         yield return new WaitForSeconds(10);
         gameObject.SetActive(false);
