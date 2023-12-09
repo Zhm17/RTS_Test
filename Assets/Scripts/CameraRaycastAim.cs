@@ -6,6 +6,7 @@ public class CameraRaycastAim : MonoBehaviour
     public static event TargetSpawnedAction OnTargetSpawned;
 
     private Camera MainCamera;
+    [Header("3D Aim")]
     [SerializeField]
     private Transform _3dPointer;
 
@@ -13,9 +14,31 @@ public class CameraRaycastAim : MonoBehaviour
     [SerializeField]
     public Transform _targetAreaT;
 
+    [SerializeField]
+    private Transform _teleportAreaT;
+
+    public enum STATE
+    {
+        TARGET = 1,
+        TELEPORT = 2
+    }
+
+    [Header("State")]
+    public STATE State = STATE.TARGET;
+
     private void Start()
     {
+        Init();
+    }
+
+    private void Init()
+    {
         MainCamera = Camera.main;
+
+        _targetAreaT?.gameObject.SetActive(false);
+        _teleportAreaT?.gameObject.SetActive(false);
+
+        State = STATE.TARGET;
     }
 
     private void Update()
@@ -58,12 +81,47 @@ public class CameraRaycastAim : MonoBehaviour
         // Spawn cube
         Debug.Log("Shooting");
 
-        if (_targetAreaT)
+        switch (State)
         {
-            _targetAreaT.position = new Vector3(newPos.x, _targetAreaT.position.y, newPos.z);
+            case STATE.TARGET:
+               
+                //Shoot TargetAreaT transform
+                if (_targetAreaT)
+                {
+                    ActiveNSetPoint(_targetAreaT, newPos);
 
-            if(OnTargetSpawned!=null) 
-                OnTargetSpawned(_targetAreaT);
+                    if (OnTargetSpawned != null)
+                        OnTargetSpawned(_targetAreaT);
+                }
+
+                // change to TELEPORT
+                State = STATE.TELEPORT;
+                break;
+            
+            case STATE.TELEPORT:
+                
+                //Shoot TeleportAreaT transform 
+                if (_teleportAreaT)
+                {
+                    ActiveNSetPoint(_teleportAreaT, newPos);
+                }
+
+                //change to TARGET
+                State = STATE.TARGET;
+                break;
+            
+            default:
+                //do nothing
+                break;
         }
+        
+        
+    }
+
+    private void ActiveNSetPoint(Transform t, Vector3 pos)
+    {
+        t.gameObject.SetActive(true);
+
+        t.position = new Vector3(pos.x, t.position.y, pos.z);
     }
 }

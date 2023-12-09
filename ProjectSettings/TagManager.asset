@@ -7,6 +7,7 @@ TagManager:
   - Unit
   - Ground
   - Target
+  - Teleport
   layers:
   - Default
   - TransparentFX
