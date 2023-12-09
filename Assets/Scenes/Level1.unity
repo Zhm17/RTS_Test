@@ -477,6 +477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _3dPointer: {fileID: 165290922}
+  _targetAreaT: {fileID: 1924523175}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,9 +1349,9 @@ GameObject:
   - component: {fileID: 1924523173}
   - component: {fileID: 1924523172}
   - component: {fileID: 1924523176}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Target
-  m_TagString: Untagged
+  m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1427,7 +1428,7 @@ Transform:
   m_GameObject: {fileID: 1924523171}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.14, y: 2.51, z: 15.72}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
