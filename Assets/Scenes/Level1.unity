@@ -477,8 +477,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _3dPointer: {fileID: 165290922}
-  _targetAreaT: {fileID: 1924523175}
-  _teleportAreaT: {fileID: 1289761819}
+  _targetAreaT: {fileID: 1924523176}
+  _teleportAreaT: {fileID: 1289761815}
   State: 1
 --- !u!1 &410087039
 GameObject:

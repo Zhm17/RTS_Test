@@ -19,19 +19,12 @@ public class Unit : MonoBehaviour
     }
     #endregion
 
-    // Start is called before the first frame update
-    void Start()
+    private void GetTarget(Vector3 position)
     {
-        if(targetPosition) 
-            agent.SetDestination(targetPosition.position);
-    }
-
-    private void GetTarget(Transform t)
-    {
-        if(t == null)
+        if(position == null)
             return;
 
-        agent.destination = t.position;
+        agent.destination = position;
     }
 
 }

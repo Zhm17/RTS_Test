@@ -3,10 +3,31 @@ using UnityEngine;
 
 public class UnitTarget : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnDisable()
     {
-        if(other.CompareTag("Unit"))
-            StartCoroutine(Cooldown_Coroutine());
+        StopAllCoroutines();
+    }
+
+    /// <summary>
+    /// Reset, active and start cooldown
+    /// </summary>
+    public void Show()
+    {
+        Hide();
+
+        gameObject.SetActive(true);
+        StopAllCoroutines();
+
+        StartCoroutine(Cooldown_Coroutine());
+    }
+
+    /// <summary>
+    /// Stop all coroutines and deactive from hierarchy
+    /// </summary>
+    public void Hide()
+    {
+        StopAllCoroutines();
+        gameObject.SetActive(false);
     }
 
     IEnumerator Cooldown_Coroutine()

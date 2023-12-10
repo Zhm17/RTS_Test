@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraRaycastAim : MonoBehaviour
 {
-    public delegate void TargetSpawnedAction(Transform t);
+    public delegate void TargetSpawnedAction(Vector3 position);
     public static event TargetSpawnedAction OnTargetSpawned;
 
     private Camera MainCamera;
@@ -12,10 +12,10 @@ public class CameraRaycastAim : MonoBehaviour
 
     [Header("Target / Spawn")]
     [SerializeField]
-    public Transform _targetAreaT;
+    public UnitTarget _targetAreaT;
 
     [SerializeField]
-    private Transform _teleportAreaT;
+    private UnitTarget _teleportAreaT;
 
     public enum STATE
     {
@@ -68,18 +68,21 @@ public class CameraRaycastAim : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    ShootClick(hit.point);
+                    Shoot(hit.point);
                 }
 
             }
         }
     }
 
-    // Spawn destionation points
-    private void ShootClick(Vector3 newPos)
+    /// <summary>
+    /// Spawn destination points
+    /// </summary>
+    /// <param name="newPos"></param>
+    private void Shoot(Vector3 newPos)
     {
         // Spawn cube
-        Debug.Log("Shooting");
+        //Debug.Log("Shooting");
 
         switch (State)
         {
@@ -91,7 +94,7 @@ public class CameraRaycastAim : MonoBehaviour
                     ActiveNSetPoint(_targetAreaT, newPos);
 
                     if (OnTargetSpawned != null)
-                        OnTargetSpawned(_targetAreaT);
+                        OnTargetSpawned(_targetAreaT.transform.position);
                 }
 
                 // change to TELEPORT
@@ -114,14 +117,19 @@ public class CameraRaycastAim : MonoBehaviour
                 //do nothing
                 break;
         }
-        
-        
     }
 
-    private void ActiveNSetPoint(Transform t, Vector3 pos)
+    /// <summary>
+    /// Show and set position
+    /// </summary>
+    /// <param name="unitTarget"></param>
+    /// <param name="pos"></param>
+    private void ActiveNSetPoint(UnitTarget unitTarget, Vector3 pos)
     {
-        t.gameObject.SetActive(true);
+        unitTarget.Show();
 
-        t.position = new Vector3(pos.x, t.position.y, pos.z);
+        unitTarget.transform.position = new Vector3(pos.x, 
+                                                    unitTarget.transform.position.y, 
+                                                    pos.z);
     }
 }
