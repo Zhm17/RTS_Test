@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class UnitTarget : MonoBehaviour
 {
+    public delegate void ActiveZoneAction(bool active);
+    public event ActiveZoneAction OnActiveZone;
+
     private void OnDisable()
     {
         StopAllCoroutines();
@@ -18,6 +21,9 @@ public class UnitTarget : MonoBehaviour
         gameObject.SetActive(true);
         StopAllCoroutines();
 
+        if(OnActiveZone!=null) 
+            OnActiveZone(true);
+
         StartCoroutine(Cooldown_Coroutine());
     }
 
@@ -27,6 +33,10 @@ public class UnitTarget : MonoBehaviour
     public void Hide()
     {
         StopAllCoroutines();
+
+        if (OnActiveZone != null) 
+            OnActiveZone(false);
+
         gameObject.SetActive(false);
     }
 
@@ -35,4 +45,5 @@ public class UnitTarget : MonoBehaviour
         yield return new WaitForSeconds(10);
         gameObject.SetActive(false);
     }
+
 }

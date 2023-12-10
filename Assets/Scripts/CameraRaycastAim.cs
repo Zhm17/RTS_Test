@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class CameraRaycastAim : MonoBehaviour
 {
-    public delegate void TargetSpawnedAction(Vector3 position);
-    public static event TargetSpawnedAction OnTargetSpawned;
+    public delegate void TargetPointSpawnedAction(Vector3 position);
+    public static event TargetPointSpawnedAction OnTargetSpawned;
+    public static event TargetPointSpawnedAction OnTeleportSpawned;
 
     private Camera MainCamera;
     [Header("3D Aim")]
@@ -17,15 +18,6 @@ public class CameraRaycastAim : MonoBehaviour
     [SerializeField]
     private UnitTarget _teleportAreaT;
 
-    public enum STATE
-    {
-        TARGET = 1,
-        TELEPORT = 2
-    }
-
-    [Header("State")]
-    public STATE State = STATE.TARGET;
-
     private void Start()
     {
         Init();
@@ -38,7 +30,6 @@ public class CameraRaycastAim : MonoBehaviour
         _targetAreaT?.gameObject.SetActive(false);
         _teleportAreaT?.gameObject.SetActive(false);
 
-        State = STATE.TARGET;
     }
 
     private void Update()
@@ -67,10 +58,10 @@ public class CameraRaycastAim : MonoBehaviour
                     _3dPointer.position = new Vector3(hit.point.x, _3dPointer.position.y, hit.point.z);
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
-                {
-                    Shoot(hit.point);
-                }
+                    ShootTarget(hit.point);
 
+                if (Input.GetKeyDown(KeyCode.Mouse1))
+                    ShootTeleport(hit.point);
             }
         }
     }
@@ -79,43 +70,33 @@ public class CameraRaycastAim : MonoBehaviour
     /// Spawn destination points
     /// </summary>
     /// <param name="newPos"></param>
-    private void Shoot(Vector3 newPos)
+    private void ShootTarget(Vector3 newPos)
     {
-        // Spawn cube
-        //Debug.Log("Shooting");
-
-        switch (State)
-        {
-            case STATE.TARGET:
+        // Spawn Target
+        //Debug.Log("Shooting Target");
                
-                //Shoot TargetAreaT transform
-                if (_targetAreaT)
-                {
-                    ActiveNSetPoint(_targetAreaT, newPos);
+        //Shoot TargetAreaT transform
+        if (_targetAreaT)
+        {
+            ActiveNSetPoint(_targetAreaT, newPos);
 
-                    if (OnTargetSpawned != null)
-                        OnTargetSpawned(_targetAreaT.transform.position);
-                }
+            if (OnTargetSpawned != null)
+                OnTargetSpawned(_targetAreaT.transform.position);
+        }
+    }
 
-                // change to TELEPORT
-                State = STATE.TELEPORT;
-                break;
-            
-            case STATE.TELEPORT:
-                
-                //Shoot TeleportAreaT transform 
-                if (_teleportAreaT)
-                {
-                    ActiveNSetPoint(_teleportAreaT, newPos);
-                }
+    private void ShootTeleport(Vector3 newPos)
+    {
+        // Spawn Teleport
+        //Debug.Log("Shooting Target");
 
-                //change to TARGET
-                State = STATE.TARGET;
-                break;
-            
-            default:
-                //do nothing
-                break;
+        //Shoot TeleportAreaT transform 
+        if (_teleportAreaT)
+        {
+            ActiveNSetPoint(_teleportAreaT, newPos);
+
+            if (_teleportAreaT != null)
+                OnTeleportSpawned(_teleportAreaT.transform.position);
         }
     }
 
