@@ -13,10 +13,10 @@ public class CameraRaycastAim : MonoBehaviour
 
     [Header("Target / Spawn")]
     [SerializeField]
-    public UnitTarget _targetAreaT;
+    public UnitTarget TargetAreaT;
 
     [SerializeField]
-    private UnitTarget _teleportAreaT;
+    private UnitTarget TeleportAreaT;
 
     private void Start()
     {
@@ -27,8 +27,8 @@ public class CameraRaycastAim : MonoBehaviour
     {
         MainCamera = Camera.main;
 
-        _targetAreaT?.gameObject.SetActive(false);
-        _teleportAreaT?.gameObject.SetActive(false);
+        TargetAreaT?.gameObject.SetActive(false);
+        TeleportAreaT?.gameObject.SetActive(false);
 
     }
 
@@ -76,12 +76,12 @@ public class CameraRaycastAim : MonoBehaviour
         //Debug.Log("Shooting Target");
                
         //Shoot TargetAreaT transform
-        if (_targetAreaT)
+        if (TargetAreaT)
         {
-            ActiveNSetPoint(_targetAreaT, newPos);
+            ActiveNSetPoint(TargetAreaT, newPos);
 
             if (OnTargetSpawned != null)
-                OnTargetSpawned(_targetAreaT.transform.position);
+                OnTargetSpawned(TargetAreaT.transform.position);
         }
     }
 
@@ -91,12 +91,12 @@ public class CameraRaycastAim : MonoBehaviour
         //Debug.Log("Shooting Target");
 
         //Shoot TeleportAreaT transform 
-        if (_teleportAreaT)
+        if (TeleportAreaT)
         {
-            ActiveNSetPoint(_teleportAreaT, newPos);
+            ActiveNSetPoint(TeleportAreaT, newPos);
 
-            if (_teleportAreaT != null)
-                OnTeleportSpawned(_teleportAreaT.transform.position);
+            if (TeleportAreaT != null)
+                OnTeleportSpawned(TeleportAreaT.transform.position);
         }
     }
 
