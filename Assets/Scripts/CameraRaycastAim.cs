@@ -85,6 +85,10 @@ public class CameraRaycastAim : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Spawn teleporting points
+    /// </summary>
+    /// <param name="newPos"></param>
     private void ShootTeleport(Vector3 newPos)
     {
         // Spawn Teleport
