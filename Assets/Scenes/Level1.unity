@@ -1246,7 +1246,7 @@ Camera:
   far clip plane: 500
   field of view: 60
   orthographic: 1
-  orthographic size: 14.5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2915,6 +2915,7 @@ GameObject:
   - component: {fileID: 619064332}
   - component: {fileID: 619064331}
   - component: {fileID: 619064333}
+  - component: {fileID: 619064334}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: Untagged
@@ -2944,7 +2945,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1726644959}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 14.5
+    OrthographicSize: 10
     NearClipPlane: -100
     FarClipPlane: 500
     Dutch: 0
@@ -2993,6 +2994,24 @@ MonoBehaviour:
   m_FocusTarget: {fileID: 0}
   m_FocusOffset: 0
   m_Profile: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+--- !u!114 &619064334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619064330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8ae9be802ca33440be58c959a4a0dc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _zoom: 0
+  _zoomMultiplier: 4
+  _minZoom: 10
+  _maxZoom: 20
+  _velocity: 0
+  _smoothTime: 0.25
 --- !u!1001 &639744258
 PrefabInstance:
   m_ObjectHideFlags: 0
