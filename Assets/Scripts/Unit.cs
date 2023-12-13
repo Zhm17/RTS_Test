@@ -95,18 +95,20 @@ public class Unit : MonoBehaviour
             Teleport();
             _agent.ResetPath();
 
-            CurrentTarget = 
-                (CurrentTeleport != null) ? 
-                        CurrentTeleport :  null;
+            CurrentTarget = null;
         }
     }
 
     private void Teleport()
     {
-        if (!CurrentTeleport) return;
+        if (CurrentTeleport == null) 
+            return;
 
+        _agent.enabled = false;
+        
         transform.position = CurrentTeleport.transform.position;
-        CurrentTeleport = null;
+
+        _agent.enabled = true;
     }
 
 }
