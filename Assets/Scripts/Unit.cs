@@ -4,78 +4,109 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Unit : MonoBehaviour
 {
-    NavMeshAgent agent => GetComponent<NavMeshAgent>();
+    private NavMeshAgent _agent => GetComponent<NavMeshAgent>();
 
     #region EVENTS SUSCRIPTIONS
     private void OnEnable()
     {
-        CameraRaycastAim.OnTargetSpawned += GetTarget;
-        CameraRaycastAim.OnTeleportSpawned += GetTeleport;
+        UnitTarget.OnSpawn += SetTarget;
     }
 
     private void OnDisable()
     {
-        CameraRaycastAim.OnTargetSpawned -= GetTarget;
-        CameraRaycastAim.OnTeleportSpawned -= GetTeleport;
+        UnitTarget.OnSpawn -= SetTarget;
     }
     #endregion
 
     [SerializeField]
-    private Vector3 _targetPosition;
-    [SerializeField]
-    private Vector3 _teleportPosition;
-
-    private void GetTarget(Vector3 pos)
+    private UnitTarget _currentTarget;
+    public UnitTarget CurrentTarget
     {
-        if(pos == null)
-            return;
-        _targetPosition = pos;
-        agent.SetDestination(pos);
+        get { return _currentTarget; }
+        private set { _currentTarget = value; }
     }
 
-    public void GetTeleport(Vector3 pos)
+    [SerializeField]
+    private UnitTarget _currentTeleport;
+    public UnitTarget CurrentTeleport
     {
-        if (pos == null)
+        get { return _currentTeleport; }
+        private set { _currentTeleport = value; }
+    }
+    
+
+
+    private void SetTarget(UnitTarget target, bool active)
+    {
+        if (target == null)
             return;
 
-        _teleportPosition = pos;       
+        // Add
+        if (active)
+        {
+            AddTarget(target);
+        } 
+
+        //Remove
+        else
+        {
+            RemoveTarget(target);
+        }
+    }
+
+    private void AddTarget(UnitTarget target)
+    {
+        if (!CurrentTarget)
+        {
+            CurrentTarget = target;
+            _agent.destination = CurrentTarget.transform.position;
+        }
+        else
+        {
+            CurrentTeleport = target;
+        }
+    }
+
+    private void RemoveTarget(UnitTarget target)
+    {
+        if(CurrentTarget
+            && CurrentTarget == target)
+        {
+            CurrentTarget = null;
+            _agent.ResetPath();
+        }
+
+        else if(CurrentTeleport 
+            && CurrentTeleport == target)
+        {
+            CurrentTeleport = null;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Target"))
+        // Compare Tag and target
+        if (other.CompareTag("Target") 
+            && CurrentTarget == other.GetComponent<UnitTarget>())
         {
-            //Debug.Log("Teleport position: " + _teleportPosition);
-            transform.position = (_teleportPosition != Vector3.zero) ?
-                                // true
-                                new Vector3(_teleportPosition.x, 
-                                transform.position.y,
-                                _teleportPosition.z) :
-                                //false
-                                new Vector3(_targetPosition.x,
-                                transform.position.y,
-                                _targetPosition.z);
+            //Debug.Log("Inside Target");
+
+            // Validate
+            Teleport();
+            _agent.ResetPath();
+
+            CurrentTarget = 
+                (CurrentTeleport != null) ? 
+                        CurrentTeleport :  null;
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    private void Teleport()
     {
-        if (other.CompareTag("Teleport"))
-        {
-            transform.position = new Vector3(_teleportPosition.x,
-                                                transform.position.y,
-                                                _teleportPosition.z);
-        }
-    }
+        if (!CurrentTeleport) return;
 
-    private void ResetTargetPosition(bool active)
-    {
-        _targetPosition = Vector3.zero;
-    }
-
-    private void ResetTeleportPosition(bool active)
-    {
-        _teleportPosition = Vector3.zero;
+        transform.position = CurrentTeleport.transform.position;
+        CurrentTeleport = null;
     }
 
 }

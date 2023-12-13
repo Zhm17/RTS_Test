@@ -1,10 +1,8 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class CameraRaycastAim : MonoBehaviour
 {
-    public delegate void TargetPointSpawnedAction(Vector3 position);
-    public static event TargetPointSpawnedAction OnTargetSpawned;
-    public static event TargetPointSpawnedAction OnTeleportSpawned;
 
     private Camera MainCamera;
     [Header("3D Aim")]
@@ -13,10 +11,7 @@ public class CameraRaycastAim : MonoBehaviour
 
     [Header("Target / Spawn")]
     [SerializeField]
-    public UnitTarget TargetAreaT;
-
-    [SerializeField]
-    private UnitTarget TeleportAreaT;
+    public List<UnitTarget> TargetAreaList;
 
     private void Start()
     {
@@ -27,11 +22,11 @@ public class CameraRaycastAim : MonoBehaviour
     {
         MainCamera = Camera.main;
 
-        TargetAreaT?.gameObject.SetActive(false);
-        TeleportAreaT?.gameObject.SetActive(false);
+        foreach (UnitTarget target in TargetAreaList)
+            target.gameObject.SetActive(false);
 
     }
-
+     
     private void Update()
     {
         PointNClick();
@@ -59,9 +54,6 @@ public class CameraRaycastAim : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                     ShootTarget(hit.point);
-
-                if (Input.GetKeyDown(KeyCode.Mouse1))
-                    ShootTeleport(hit.point);
             }
         }
     }
@@ -72,35 +64,18 @@ public class CameraRaycastAim : MonoBehaviour
     /// <param name="newPos"></param>
     private void ShootTarget(Vector3 newPos)
     {
-        // Spawn Target
         //Debug.Log("Shooting Target");
                
         //Shoot TargetAreaT transform
-        if (TargetAreaT)
+        foreach (UnitTarget target in TargetAreaList)
         {
-            ActiveNSetPoint(TargetAreaT, newPos);
-
-            if (OnTargetSpawned != null)
-                OnTargetSpawned(TargetAreaT.transform.position);
-        }
-    }
-
-    /// <summary>
-    /// Spawn teleporting points
-    /// </summary>
-    /// <param name="newPos"></param>
-    private void ShootTeleport(Vector3 newPos)
-    {
-        // Spawn Teleport
-        //Debug.Log("Shooting Target");
-
-        //Shoot TeleportAreaT transform 
-        if (TeleportAreaT)
-        {
-            ActiveNSetPoint(TeleportAreaT, newPos);
-
-            if (TeleportAreaT != null)
-                OnTeleportSpawned(TeleportAreaT.transform.position);
+            // find the first element inactive
+            if (!target.isActiveAndEnabled)
+            {
+                // active and set position
+                ActiveNSetPoint(target, newPos);
+                return;
+            }
         }
     }
 
@@ -111,10 +86,6 @@ public class CameraRaycastAim : MonoBehaviour
     /// <param name="pos"></param>
     private void ActiveNSetPoint(UnitTarget unitTarget, Vector3 pos)
     {
-        unitTarget.Show();
-
-        unitTarget.transform.position = new Vector3(pos.x, 
-                                                    unitTarget.transform.position.y, 
-                                                    pos.z);
+        unitTarget.Show(pos);
     }
 }

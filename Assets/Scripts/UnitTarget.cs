@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class UnitTarget : MonoBehaviour
 {
-    public delegate void ActiveZoneAction(bool active);
-    public event ActiveZoneAction OnActiveZone;
+    public delegate void SpawnAction(UnitTarget target, bool active);
+    public static event SpawnAction OnSpawn;
+
+    [SerializeField]
+    public float LifeTimeSeconds = 10f;
 
     private void OnDisable()
     {
@@ -14,15 +17,17 @@ public class UnitTarget : MonoBehaviour
     /// <summary>
     /// Reset, active and start cooldown
     /// </summary>
-    public void Show()
+    public void Show(Vector3 newpos)
     {
         Hide();
 
         gameObject.SetActive(true);
-        StopAllCoroutines();
+        transform.position = new Vector3(newpos.x,
+                                            transform.position.y,
+                                            newpos.z);
 
-        if(OnActiveZone!=null) 
-            OnActiveZone(true);
+        if (OnSpawn!=null) 
+            OnSpawn(this, true);
 
         StartCoroutine(Cooldown_Coroutine());
     }
@@ -34,16 +39,16 @@ public class UnitTarget : MonoBehaviour
     {
         StopAllCoroutines();
 
-        if (OnActiveZone != null) 
-            OnActiveZone(false);
+        if (OnSpawn != null) 
+            OnSpawn(this, false);
 
         gameObject.SetActive(false);
     }
 
     IEnumerator Cooldown_Coroutine()
     {
-        yield return new WaitForSeconds(10);
-        gameObject.SetActive(false);
+        yield return new WaitForSeconds(LifeTimeSeconds);
+        Hide();
     }
 
 }
