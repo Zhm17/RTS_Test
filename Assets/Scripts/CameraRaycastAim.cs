@@ -5,6 +5,7 @@ public class CameraRaycastAim : MonoBehaviour
 {
 
     private Camera MainCamera;
+    
     [Header("3D Aim")]
     [SerializeField]
     private Transform _3dPointer;

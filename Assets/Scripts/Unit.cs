@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -33,8 +34,15 @@ public class Unit : MonoBehaviour
         get { return _currentTeleport; }
         private set { _currentTeleport = value; }
     }
-    
 
+    [Header("VFX")]
+    [SerializeField]
+    private ParticleSystem _teleportVFX;
+
+    private void Start()
+    {
+        if(_teleportVFX) _teleportVFX.gameObject.SetActive(false);
+    }
 
     private void SetTarget(UnitTarget target, bool active)
     {
@@ -109,6 +117,27 @@ public class Unit : MonoBehaviour
         transform.position = CurrentTeleport.transform.position;
 
         _agent.enabled = true;
+
+        StartCoroutine(PlayTeleportFX(2f));
+    }
+
+    IEnumerator PlayTeleportFX(float delay)
+    {
+        PlaySound();
+        if (_teleportVFX) _teleportVFX.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(delay);
+
+        if (_teleportVFX) 
+            _teleportVFX.gameObject.SetActive(false);
+
+        yield return null;
+    }
+
+    private void PlaySound()
+    {
+        AudioSource audioSource = GetComponent<AudioSource>();
+        if (audioSource) audioSource.Play();
     }
 
 }

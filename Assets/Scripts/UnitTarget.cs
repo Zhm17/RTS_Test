@@ -22,6 +22,8 @@ public class UnitTarget : MonoBehaviour
         Hide();
 
         gameObject.SetActive(true);
+        PlaySound();
+
         transform.position = new Vector3(newpos.x,
                                             transform.position.y,
                                             newpos.z);
@@ -49,6 +51,11 @@ public class UnitTarget : MonoBehaviour
     {
         yield return new WaitForSeconds(LifeTimeSeconds);
         Hide();
+    }
+    private void PlaySound()
+    {
+        AudioSource audioSource = GetComponent<AudioSource>();
+        if (audioSource) audioSource.Play();
     }
 
 }
